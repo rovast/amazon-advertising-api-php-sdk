@@ -5,7 +5,7 @@ Official Amazon Advertising API PHP client library.
 > Due to Official Amazon does not offer an valid composer package.
 > So, This repository forks from  https://github.com/amzn/amazon-advertising-api-php-sdk, and offers a compser package.
 
-## install
+## Install
 
 `composer require rovast/amazon-advertising-api-php-sdk`
 
