@@ -393,13 +393,13 @@ class Client
 
     public function getReport($reportId)
     {
-        echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function getReport start";
+        echo date("Y-m-d H:i:s") . " [" . posix_getpid() . "]" . "function getReport start" . PHP_EOL;
         $req = $this->_operation("reports/{$reportId}");
-        echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function getReport: get download url";
+        echo date("Y-m-d H:i:s") . " [" . posix_getpid() . "]" . "function getReport: get download url" . PHP_EOL;
         if ($req["success"]) {
             $json = json_decode($req["response"], true);
             if ($json["status"] == "SUCCESS") {
-                echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function getReport: start download file";
+                echo date("Y-m-d H:i:s") . " [" . posix_getpid() . "]" . "function getReport: start download file" . PHP_EOL;
                 return $this->_download($json["location"]);
             }
         }
@@ -419,22 +419,22 @@ class Client
             array_push($headers, "Amazon-Advertising-API-Scope: {$this->profileId}");
         }
 
-        echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: init download curl";
+        echo date("Y-m-d H:i:s") . " [" . posix_getpid() . "]" . "function _download: init download curl" . PHP_EOL;
         $request = new CurlRequest();
         $request->setOption(CURLOPT_URL, $location);
         $request->setOption(CURLOPT_HTTPHEADER, $headers);
         $request->setOption(CURLOPT_USERAGENT, $this->userAgent);
 
         if ($gunzip) {
-            echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: start download file";
+            echo date("Y-m-d H:i:s") . " [" . posix_getpid() . "]" . "function _download: start download file" . PHP_EOL;
             $response = $this->_executeRequest($request);
-            echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: download file success";
+            echo date("Y-m-d H:i:s") . " [" . posix_getpid() . "]" . "function _download: download file success" . PHP_EOL;
             $response["response"] = gzdecode($response["response"]);
-            echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: gzdecode file success";
+            echo date("Y-m-d H:i:s") . " [" . posix_getpid() . "]" . "function _download: gzdecode file success" . PHP_EOL;
             return $response;
         }
 
-        echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: not gunzip";
+        echo date("Y-m-d H:i:s") . " [" . posix_getpid() . "]" . "function _download: not gunzip" . PHP_EOL;
         return $this->_executeRequest($request);
     }
 
@@ -494,7 +494,7 @@ class Client
 
         if ($response_info["http_code"] == 307) {
             /* application/octet-stream */
-            echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _executeRequest: http_code 307";
+            echo date("Y-m-d H:i:s") . " [" . posix_getpid() . "]" . "function _executeRequest: http_code 307" . PHP_EOL;
             return $this->_download($response_info["redirect_url"], true);
         }
 
