@@ -20,7 +20,7 @@
     ],
     "extra": {
         "branch-alias": {
-            "dev-debug": "2.0-debug.x"
+            "dev-debug": "2.0.x-dev"
         }
     },
     "autoload": {
