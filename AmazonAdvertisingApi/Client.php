@@ -1,4 +1,5 @@
 <?php
+
 namespace AmazonAdvertisingApi;
 
 require_once "Versions.php";
@@ -8,12 +9,12 @@ require_once "CurlRequest.php";
 class Client
 {
     private $config = array(
-        "clientId" => null,
+        "clientId"     => null,
         "clientSecret" => null,
-        "region" => null,
-        "accessToken" => null,
+        "region"       => null,
+        "accessToken"  => null,
         "refreshToken" => null,
-        "sandbox" => false);
+        "sandbox"      => false);
 
     private $apiVersion = null;
     private $applicationVersion = null;
@@ -28,15 +29,15 @@ class Client
 
     public function __construct($config)
     {
-        $regions = new Regions();
+        $regions         = new Regions();
         $this->endpoints = $regions->endpoints;
 
-        $versions = new Versions();
+        $versions             = new Versions();
         $this->versionStrings = $versions->versionStrings;
 
-        $this->apiVersion = $this->versionStrings["apiVersion"];
+        $this->apiVersion         = $this->versionStrings["apiVersion"];
         $this->applicationVersion = $this->versionStrings["applicationVersion"];
-        $this->userAgent = "AdvertisingAPI PHP Client Library v{$this->applicationVersion}";
+        $this->userAgent          = "AdvertisingAPI PHP Client Library v{$this->applicationVersion}";
 
         $this->_validateConfig($config);
         $this->_validateConfigParameters();
@@ -52,20 +53,20 @@ class Client
     {
         $headers = array(
             "Content-Type: application/x-www-form-urlencoded;charset=UTF-8",
-            "User-Agent: {$this->userAgent}"
+            "User-Agent: {$this->userAgent}",
         );
 
         $refresh_token = rawurldecode($this->config["refreshToken"]);
 
         $params = array(
-            "grant_type" => "refresh_token",
+            "grant_type"    => "refresh_token",
             "refresh_token" => $refresh_token,
-            "client_id" => $this->config["clientId"],
+            "client_id"     => $this->config["clientId"],
             "client_secret" => $this->config["clientSecret"]);
 
         $data = "";
         foreach ($params as $k => $v) {
-            $data .= "{$k}=".rawurlencode($v)."&";
+            $data .= "{$k}=" . rawurlencode($v) . "&";
         }
 
         $url = "https://{$this->tokenUrl}";
@@ -83,7 +84,7 @@ class Client
         if (array_key_exists("access_token", $response_array)) {
             $this->config["accessToken"] = $response_array["access_token"];
         } else {
-            $this->_logAndThrow("Unable to refresh token. 'access_token' not found in response. ". print_r($response, true));
+            $this->_logAndThrow("Unable to refresh token. 'access_token' not found in response. " . print_r($response, true));
         }
 
         return $response;
@@ -338,7 +339,7 @@ class Client
     {
         $data = array(
             "adGroupId" => $adGroupId,
-            "keywords" => $data);
+            "keywords"  => $data);
         return $this->_operation("keywords/bidRecommendations", $data, "POST");
     }
 
@@ -392,10 +393,13 @@ class Client
 
     public function getReport($reportId)
     {
+        echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function getReport start";
         $req = $this->_operation("reports/{$reportId}");
+        echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function getReport: get download url";
         if ($req["success"]) {
             $json = json_decode($req["response"], true);
             if ($json["status"] == "SUCCESS") {
+                echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function getReport: start download file";
                 return $this->_download($json["location"]);
             }
         }
@@ -415,17 +419,22 @@ class Client
             array_push($headers, "Amazon-Advertising-API-Scope: {$this->profileId}");
         }
 
+        echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: init download curl";
         $request = new CurlRequest();
         $request->setOption(CURLOPT_URL, $location);
         $request->setOption(CURLOPT_HTTPHEADER, $headers);
         $request->setOption(CURLOPT_USERAGENT, $this->userAgent);
 
         if ($gunzip) {
+            echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: start download file";
             $response = $this->_executeRequest($request);
+            echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: download file success";
             $response["response"] = gzdecode($response["response"]);
+            echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: gzdecode file success";
             return $response;
         }
 
+        echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _download: not gunzip";
         return $this->_executeRequest($request);
     }
 
@@ -434,24 +443,24 @@ class Client
         $headers = array(
             "Authorization: bearer {$this->config["accessToken"]}",
             "Content-Type: application/json",
-            "User-Agent: {$this->userAgent}"
+            "User-Agent: {$this->userAgent}",
         );
 
         if (!is_null($this->profileId)) {
             array_push($headers, "Amazon-Advertising-API-Scope: {$this->profileId}");
         }
 
-        $request = new CurlRequest();
-        $url = "{$this->endpoint}/{$interface}";
+        $request         = new CurlRequest();
+        $url             = "{$this->endpoint}/{$interface}";
         $this->requestId = null;
-        $data = "";
+        $data            = "";
 
         switch (strtolower($method)) {
             case "get":
                 if (!empty($params)) {
                     $url .= "?";
                     foreach ($params as $k => $v) {
-                        $url .= "{$k}=".rawurlencode($v)."&";
+                        $url .= "{$k}=" . rawurlencode($v) . "&";
                     }
                     $url = rtrim($url, "&");
                 }
@@ -478,33 +487,34 @@ class Client
 
     protected function _executeRequest($request)
     {
-        $response = $request->execute();
+        $response        = $request->execute();
         $this->requestId = $request->requestId;
-        $response_info = $request->getInfo();
+        $response_info   = $request->getInfo();
         $request->close();
 
         if ($response_info["http_code"] == 307) {
             /* application/octet-stream */
+            echo date("Y-m-d H:i:s") . " [" . getmygid() . "]" . "function _executeRequest: http_code 307";
             return $this->_download($response_info["redirect_url"], true);
         }
 
         if (!preg_match("/^(2|3)\d{2}$/", $response_info["http_code"])) {
             $requestId = 0;
-            $json = json_decode($response, true);
+            $json      = json_decode($response, true);
             if (!is_null($json)) {
                 if (array_key_exists("requestId", $json)) {
                     $requestId = json_decode($response, true)["requestId"];
                 }
             }
-            return array("success" => false,
-                    "code" => $response_info["http_code"],
-                    "response" => $response,
-                    "requestId" => $requestId);
+            return array("success"   => false,
+                         "code"      => $response_info["http_code"],
+                         "response"  => $response,
+                         "requestId" => $requestId);
         } else {
-            return array("success" => true,
-                    "code" => $response_info["http_code"],
-                    "response" => $response,
-                    "requestId" => $this->requestId);
+            return array("success"   => true,
+                         "code"      => $response_info["http_code"],
+                         "response"  => $response,
+                         "requestId" => $this->requestId);
         }
     }
 
