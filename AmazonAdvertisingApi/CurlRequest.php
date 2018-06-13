@@ -5,6 +5,7 @@ class CurlRequest
 {
     private $handle = null;
     public $requestId = null;
+    public $timeout = 300; // default timeout for 300 seconds
 
     public function __construct()
     {
@@ -19,6 +20,8 @@ class CurlRequest
         curl_setopt($this->handle, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->handle, CURLOPT_HEADER, false);
+        curl_setopt($this->handle, CURLOPT_TIMEOUT, $this->timeout);
+
         if (defined("CURLOPT_IPRESOLVE")) {
             curl_setopt($this->handle, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         }
