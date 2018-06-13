@@ -1,3 +1,5 @@
+**This is a debug version. DO NOT USE IN PRODUCTION**
+
 ## Synopsis
 
 Official Amazon Advertising API PHP client library.
