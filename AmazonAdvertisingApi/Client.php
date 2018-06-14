@@ -25,6 +25,7 @@ class Client
     private $versionStrings = null;
 
     public $profileId = null;
+    public $curlTimeout = 600; // set timeout for curl request. default: 600 seconds
 
     public function __construct($config)
     {
@@ -476,8 +477,16 @@ class Client
         return $this->_executeRequest($request);
     }
 
+    /**
+     * @param \AmazonAdvertisingApi\CurlRequest $request
+     * @return array
+     * @author ROVAST
+     */
     protected function _executeRequest($request)
     {
+        //  set timeout option
+        $request->setOption(CURLOPT_TIMEOUT, $this->curlTimeout);
+
         $response = $request->execute();
         $this->requestId = $request->requestId;
         $response_info = $request->getInfo();
