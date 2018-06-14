@@ -20,7 +20,7 @@
     ],
     "extra": {
         "branch-alias": {
-            "mine": "1.2.x"
+            "dev-1.2": "1.2.x-dev"
         }
     },
     "autoload": {
