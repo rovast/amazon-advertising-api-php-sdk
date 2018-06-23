@@ -16,9 +16,21 @@ This is a fork from amazon official SDK. [amzn/amazon-advertising-api-php-sdk](h
 > When you download report, you may want xx.gz binary content instead of json content.
 > Cause the binary is compressed and has a small file size.
 
-**composer install**
+**branch**
+
+- master
+> This branch is the same to official SDK
+
+- mine
+> This branch is updated, and add some points.
+
+**composer install the official sdk**
 
 `composer require rovast/amazon-advertising-api-php-sdk`
+
+**composer install mine sdk**
+
+`composer require rovast/amazon-advertising-api-php-sdk:dev-mine`
 
 ---
 
