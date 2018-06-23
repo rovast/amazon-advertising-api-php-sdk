@@ -24,6 +24,13 @@ class Client
     private $endpoints = null;
     private $versionStrings = null;
 
+    /**
+     * gzdecode the download file.
+     *
+     * @var bool gzdecodeDownload
+     */
+    private $gzdecodeDownload = true;
+
     public $profileId = null;
     public $curlTimeout = 600; // set timeout for curl request. default: 600 seconds
 
@@ -391,8 +398,10 @@ class Client
         return $this->_operation("{$recordType}/report", $data, "POST");
     }
 
-    public function getReport($reportId)
+    public function getReport($reportId, $gzdecode = true)
     {
+        $this->gzdecodeDownload = $gzdecode;
+
         $req = $this->_operation("reports/{$reportId}");
         if ($req["success"]) {
             $json = json_decode($req["response"], true);
@@ -423,7 +432,7 @@ class Client
 
         if ($gunzip) {
             $response = $this->_executeRequest($request);
-            $response["response"] = gzdecode($response["response"]);
+            $response["response"] = $this->gzdecodeDownload ? gzdecode($response["response"]) : $response["response"];
             return $response;
         }
 

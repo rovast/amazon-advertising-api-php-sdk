@@ -1,13 +1,31 @@
+# About
+
+This is a fork from amazon official SDK. [amzn/amazon-advertising-api-php-sdk](https://github.com/amzn/amazon-advertising-api-php-sdk)
+
+
+**updated points**
+
+- support composer install
+> The official sdk does not support composer, now you can run `composer require rovast/amazon-advertising-api-php-sdk` to install.
+
+- add timeout option for curl request
+> By default, the official SDK has no timeout option for curl request.
+> If there is something wrong with Network, the download report job may handle all the time.
+
+- add gzdecode option for get_report
+> When you download report, you may want xx.gz binary content instead of json content.
+> Cause the binary is compressed and has a small file size.
+
+**composer install**
+
+`composer require rovast/amazon-advertising-api-php-sdk`
+
+---
+
 ## Synopsis
 
 Official Amazon Advertising API PHP client library.
 
-> Due to Official Amazon does not offer an valid composer package.
-> So, This repository forks from  https://github.com/amzn/amazon-advertising-api-php-sdk, and offers a compser package.
-
-## Install
-
-`composer require rovast/amazon-advertising-api-php-sdk`
 
 ## Requirements
 
