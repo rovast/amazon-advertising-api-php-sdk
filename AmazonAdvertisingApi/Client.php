@@ -381,8 +381,10 @@ class Client
         return $this->_operation("{$recordType}/snapshot", $data, "POST");
     }
 
-    public function getSnapshot($snapshotId)
+    public function getSnapshot($snapshotId, $gzdecode = true)
     {
+        $this->gzdecodeDownload = $gzdecode;
+
         $req = $this->_operation("snapshots/{$snapshotId}");
         if ($req["success"]) {
             $json = json_decode($req["response"], true);
